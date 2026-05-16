@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 
 # --- CONFIG ---
-st.set_page_config(page_title="OMNILINGUA", layout="centered", page_icon="🌐")
+st.set_page_config(page_title="OMNILINGUA", layout="wide", page_icon="🌐")
 
 BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
 
@@ -16,7 +16,7 @@ st.markdown(f"""
 
     .block-container {{
         background-color: #0d0d2b;
-        max-width: 860px !important;
+        max-width: 900px !important;
         padding: 0 0 32px 0 !important;
         box-shadow: 0 0 80px rgba(0,0,0,0.6), 0 0 40px rgba(77,171,255,0.04);
         margin-top: 10px;
@@ -77,34 +77,41 @@ st.markdown(f"""
 
     .content-pad {{ padding: 24px 28px; }}
 
-    /* Override Streamlit inputs */
-    .stTextInput input {{
+    /* Sidebar */
+    [data-testid="stSidebar"] {{
+        background-color: #0a0a1f !important;
+        border-right: 1px solid rgba(77,171,255,0.12) !important;
+    }}
+
+    [data-testid="stSidebar"] * {{
+        font-family: 'DM Sans', sans-serif !important;
+    }}
+
+    [data-testid="stSidebar"] .stTextInput input {{
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(77,171,255,0.22) !important;
         border-radius: 10px !important;
         color: white !important;
-        font-family: 'DM Sans', sans-serif !important;
         font-size: 14px !important;
     }}
 
-    .stTextInput input:focus {{
+    [data-testid="stSidebar"] .stTextInput input:focus {{
         border-color: #4dabff !important;
         box-shadow: 0 0 0 3px rgba(77,171,255,0.15) !important;
     }}
 
-    .stSelectbox > div > div {{
+    [data-testid="stSidebar"] .stSelectbox > div > div {{
         background: rgba(255,255,255,0.05) !important;
         border: 1px solid rgba(77,171,255,0.22) !important;
         border-radius: 10px !important;
         color: white !important;
     }}
 
-    .stTextInput label, .stSelectbox label {{
+    [data-testid="stSidebar"] label {{
         color: #8888aa !important;
         font-size: 11px !important;
         letter-spacing: 2px !important;
         text-transform: uppercase !important;
-        font-family: 'DM Sans', sans-serif !important;
     }}
 
     /* Results bar */
@@ -141,7 +148,11 @@ st.markdown(f"""
         transition: opacity 0.3s;
     }}
 
-    .language-card:hover {{ border-color: rgba(77,171,255,0.5); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(77,171,255,0.1); }}
+    .language-card:hover {{
+        border-color: rgba(77,171,255,0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(77,171,255,0.1);
+    }}
     .language-card:hover::before {{ opacity: 1; }}
 
     @keyframes cardIn {{
@@ -149,13 +160,31 @@ st.markdown(f"""
         to   {{ opacity: 1; transform: translateY(0); }}
     }}
 
-    .card-header {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }}
+    .card-header {{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }}
+
     .lang-name {{ font-size: 20px; font-weight: 700; color: white; }}
 
-    .card-meta {{ display: flex; gap: 20px; flex-wrap: wrap; color: #8888aa; font-size: 13px; margin-bottom: 14px; }}
+    .card-meta {{
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        color: #8888aa;
+        font-size: 13px;
+        margin-bottom: 14px;
+    }}
     .card-meta b {{ color: #c8c8e0; }}
 
-    .card-actions {{ display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }}
+    .card-actions {{
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }}
 
     .btn-wiki {{
         display: inline-flex; align-items: center; gap: 5px;
@@ -164,7 +193,11 @@ st.markdown(f"""
         border-radius: 8px; border: 1px solid rgba(77,171,255,0.25);
         background: transparent; transition: background 0.2s, border-color 0.2s;
     }}
-    .btn-wiki:hover {{ background: rgba(77,171,255,0.12); border-color: #4dabff; color: #4dabff; }}
+    .btn-wiki:hover {{
+        background: rgba(77,171,255,0.12);
+        border-color: #4dabff;
+        color: #4dabff;
+    }}
 
     .btn-learn {{
         display: inline-flex; align-items: center; gap: 6px;
@@ -174,7 +207,23 @@ st.markdown(f"""
         padding: 8px 18px; border-radius: 8px;
         transition: box-shadow 0.2s, transform 0.15s;
     }}
-    .btn-learn:hover {{ box-shadow: 0 0 20px rgba(77,171,255,0.6); transform: translateY(-1px); color: #050517; }}
+    .btn-learn:hover {{
+        box-shadow: 0 0 20px rgba(77,171,255,0.6);
+        transform: translateY(-1px);
+        color: #050517;
+    }}
+
+    /* Stat box sidebar */
+    .stat-box {{
+        background: rgba(77,171,255,0.08);
+        border: 1px solid rgba(77,171,255,0.2);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        margin-top: 8px;
+    }}
+    .stat-num {{ font-size: 32px; font-weight: 700; color: #4dabff; display: block; }}
+    .stat-label {{ font-size: 11px; color: #6666aa; letter-spacing: 2px; text-transform: uppercase; }}
 
     .empty-state {{ text-align: center; padding: 60px 20px; color: #6666aa; }}
     .empty-icon {{ font-size: 48px; display: block; margin-bottom: 12px; opacity: 0.5; }}
@@ -198,35 +247,32 @@ def load_data():
 df = load_data()
 
 
-# --- FILTRI (in cima, layout verticale mobile-friendly) ---
-st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+# --- SIDEBAR ---
+with st.sidebar:
+    st.markdown("### 🔍 Filtri")
+    st.markdown("---")
 
-col1, col2, col3, col4 = st.columns([2, 1, 1.4, 1.4])
-
-with col1:
     search = st.text_input("Cerca lingua", placeholder="Es. Giapponese…")
 
-with col2:
-    diff_options = ["Tutte"] + [("⭐" * i + f"  ({i})") for i in range(1, 6)]
-    diff_filter = st.selectbox("Difficoltà", diff_options)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-with col3:
+    diff_options = ["Tutte", "⭐ (1)", "⭐⭐ (2)", "⭐⭐⭐ (3)", "⭐⭐⭐⭐ (4)", "⭐⭐⭐⭐⭐ (5)"]
+    diff_filter = st.selectbox("Difficoltà (esatta)", diff_options)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
     sort_by = st.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
-
-with col4:
     sort_dir = st.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
-
-ascending = sort_dir == "↑ Crescente"
-
-st.markdown("<div style='height:4px'></div>", unsafe_allow_html=True)
 
 
 # --- FILTER ---
+ascending = sort_dir == "↑ Crescente"
+
 filtered_df = df[df['nome'].str.contains(search, case=False, na=False)].copy()
 
 # Difficoltà esatta
 if diff_filter != "Tutte":
-    exact_diff = int(diff_filter.split("(")[1].replace(")", ""))
+    exact_diff = diff_options.index(diff_filter)  # indice 1-5 corrisponde alla difficoltà
     filtered_df = filtered_df[filtered_df['difficolta'] == exact_diff]
 
 # --- SORT ---
@@ -235,27 +281,35 @@ if sort_by == "Nome":
 elif sort_by == "Difficoltà":
     filtered_df = filtered_df.sort_values('difficolta', ascending=ascending)
 elif sort_by == "Parlanti":
-    # Estrae il numero da stringhe come "65 milioni", "1.1 miliardi"
     def parse_speakers(s):
         s = str(s).lower().replace(',', '.')
-        num = ''.join(c for c in s.split()[0] if c.isdigit() or c == '.')
+        parts = s.split()
         try:
-            val = float(num)
+            val = float(''.join(c for c in parts[0] if c.isdigit() or c == '.'))
         except:
             return 0
-        if 'miliard' in s:
-            val *= 1_000
+        if any('miliard' in p for p in parts):
+            val *= 1000
         return val
 
     filtered_df['_spk_num'] = filtered_df['speakers'].apply(parse_speakers)
     filtered_df = filtered_df.sort_values('_spk_num', ascending=ascending)
     filtered_df = filtered_df.drop(columns=['_spk_num'])
 
+# Stat box
+with st.sidebar:
+    count = len(filtered_df)
+    st.markdown(f"""
+        <div class="stat-box">
+            <span class="stat-num">{count}</span>
+            <span class="stat-label">Lingue trovate</span>
+        </div>
+    """, unsafe_allow_html=True)
+
 
 # --- CARDS ---
 st.markdown('<div class="content-pad">', unsafe_allow_html=True)
 
-count = len(filtered_df)
 label = f"{count} lingua{'e' if count != 1 else ''} trovata{'e' if count != 1 else ''}"
 st.markdown(f'<div class="results-bar">{label}</div>', unsafe_allow_html=True)
 
