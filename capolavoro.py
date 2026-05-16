@@ -2,7 +2,8 @@ import streamlit as st
 import pandas as pd
 
 # --- CONFIG & STYLES ---
-st.set_page_config(page_title="OMNILINGUA", layout="wide")
+# MODIFICA: Forziamo la sidebar a rimanere sempre aperta all'avvio con initial_sidebar_state="expanded"
+st.set_page_config(page_title="OMNILINGUA", layout="wide", initial_sidebar_state="expanded")
 
 BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
 
@@ -16,6 +17,11 @@ st.markdown(f"""
     /* Rimuove lo spazio vuoto in alto lasciato dalla barra nascosta */
     .stAppDeployDropdown {{
         display: none !important;
+    }}
+    
+    /* Riduce il padding superiore nativo per dare più spazio al banner ed evitare sovrapposizioni */
+    .stMainBlockContainer {{
+        padding-top: 2rem !important;
     }}
     
     /* Sfondo generale leggermente più chiaro */
@@ -108,7 +114,6 @@ except FileNotFoundError:
     st.stop()
 
 # --- INIZIALIZZAZIONE STATE ---
-# Usiamo lo st.session_state per salvare i filtri attivi in memoria
 if 'search_active' not in st.session_state:
     st.session_state.search_active = ""
 if 'diff_active' not in st.session_state:
@@ -121,7 +126,6 @@ if 'sort_dir_active' not in st.session_state:
 # --- SIDEBAR WIDGETS ---
 st.sidebar.title("🔍 Filtri")
 
-# I widget cambiano temporaneamente i valori di input...
 search_input = st.sidebar.text_input("Cerca una lingua...", value=st.session_state.search_active)
 
 diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
@@ -139,7 +143,6 @@ sort_dir_input = st.sidebar.selectbox("Ordine", sort_dir_options, index=current_
 # Tasto statico fisso sempre presente
 btn_filtra = st.sidebar.button("Applica Filtri 🚀")
 
-# ...ma i filtri cambiano EFFETTIVAMENTE solo quando clicchi il tasto
 if btn_filtra:
     st.session_state.search_active = search_input
     st.session_state.diff_active = diff_input
@@ -147,7 +150,7 @@ if btn_filtra:
     st.session_state.sort_dir_active = sort_dir_input
     st.rerun()
 
-# --- MAIN LOGIC (Utilizza i filtri salvati nello state) ---
+# --- MAIN LOGIC ---
 ascending = st.session_state.sort_dir_active == "↑ Crescente"
 
 filtered_df = df[df['nome'].str.contains(st.session_state.search_active, case=False)].copy()
