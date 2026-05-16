@@ -73,15 +73,28 @@ elif sort_by == "Difficoltà":
     filtered_df = filtered_df.sort_values('difficolta', ascending=ascending)
 elif sort_by == "Parlanti":
     def parse_speakers(s):
-        s = str(s).lower().replace(',', '.')
+        s = str(s).lower().strip()
+        # Rimuove eventuali punti usati come separatori di migliaia (es. 1.200 -> 1200)
+        # e normalizza la virgola per i decimali (es. 1,5 milioni -> 1.5 milioni)
+        s = s.replace('.', '').replace(',', '.')
+        
         parts = s.split()
         try:
+            # Estrae solo il numero (es. "1.5" o "600")
             val = float(''.join(c for c in parts[0] if c.isdigit() or c == '.'))
         except:
             return 0
+        
+        # Applica il moltiplicatore corretto in base al testo
         if any('miliard' in p for p in parts):
-            val *= 1000
+            val *= 1_000_000_000
+        elif any('milion' in p for p in parts):
+            val *= 1_000_000
+        elif any('mila' in p or 'mila' in s for p in parts):
+            val *= 1_000
+            
         return val
+
     filtered_df['_spk'] = filtered_df['speakers'].apply(parse_speakers)
     filtered_df = filtered_df.sort_values('_spk', ascending=ascending).drop(columns=['_spk'])
 if not filtered_df.empty:
