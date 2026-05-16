@@ -1,69 +1,23 @@
 import streamlit as st
 import pandas as pd
-
 # --- CONFIG & STYLES ---
-# MODIFICA: Forziamo la sidebar a rimanere sempre aperta all'avvio con initial_sidebar_state="expanded"
-st.set_page_config(page_title="OMNILINGUA", layout="wide", initial_sidebar_state="expanded")
-
+st.set_page_config(page_title="OMNILINGUA", layout="wide")
 BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
-
 st.markdown(f"""
     <style>
-    /* Nasconde la barra nera nativa di Streamlit (Share, GitHub, ecc.) */
-    [data-testid="stHeader"] {{
-        display: none !important;
-    }}
-    
-    /* Rimuove lo spazio vuoto in alto lasciato dalla barra nascosta */
-    .stAppDeployDropdown {{
-        display: none !important;
-    }}
-    
-    /* Riduce il padding superiore nativo per dare più spazio al banner ed evitare sovrapposizioni */
-    .stMainBlockContainer {{
-        padding-top: 2rem !important;
-    }}
-    
-    /* Sfondo generale leggermente più chiaro */
-    .stApp {{ background-color: #12122c; }} 
-    
+    .stApp {{ background-color: #050517; }}
     .block-container {{
-        background-color: #1b1b3a; 
+        background-color: #0d0d2b; 
         max-width: 850px !important; 
         padding: 1rem !important; 
         box-shadow: 0 0 50px rgba(0,0,0,0.5); 
         margin-top: 10px;
         border-radius: 20px;
     }}
-    
-    /* Tendina (Sidebar) della stessa palette di colori */
-    [data-testid="stSidebar"] {{
-        background-color: #1b1b3a !important;
-    }}
-    [data-testid="stSidebar"] * {{
-        color: #e0e0e0;
-    }}
-
-    /* Personalizzazione estetica del tasto Filtra nella sidebar */
-    div.stButton > button {{
-        background-color: #4dabff !important;
-        color: white !important;
-        border-radius: 8px !important;
-        border: none !important;
-        width: 100%;
-        font-weight: bold;
-        padding: 10px;
-        transition: background-color 0.3s;
-    }}
-    div.stButton > button:hover {{
-        background-color: #358ecc !important;
-        color: white !important;
-    }}
-
     .banner {{
         width: 100%;
         height: 180px;
-        background-image: linear-gradient(to bottom, rgba(27, 27, 58, 0), rgba(27, 27, 58, 1)), url('{BANNER_URL}');
+        background-image: linear-gradient(to bottom, rgba(13, 13, 43, 0.3), rgba(13, 13, 43, 1)), url('{BANNER_URL}');
         background-size: cover;
         background-position: center;
         border-radius: 15px;
@@ -72,14 +26,6 @@ st.markdown(f"""
         justify-content: center;
         margin-bottom: 20px;
     }}
-    
-    /* Banner più alto su dispositivi mobili (telefoni) */
-    @media (max-width: 768px) {{
-        .banner {{
-            height: 250px;
-        }}
-    }}
-
     .main-title {{
         color: white;
         font-size: clamp(30px, 8vw, 55px);
@@ -89,11 +35,11 @@ st.markdown(f"""
         text-align: center;
     }}
     .language-card {{
-        background: rgba(255, 255, 255, 0.05); 
+        background: rgba(255, 255, 255, 0.03);
         padding: 15px;
         border-radius: 15px;
         margin-bottom: 15px;
-        border: 1px solid rgba(77, 171, 255, 0.3);
+        border: 1px solid rgba(77, 171, 255, 0.2);
     }}
     .wiki-link {{ color: #4dabff; text-decoration: none; font-weight: bold; font-size: 14px; }}
     </style>
@@ -101,69 +47,31 @@ st.markdown(f"""
         <div class="main-title">OMNILINGUA</div>
     </div>
 """, unsafe_allow_html=True)
-
 # --- LOAD DATA ---
 @st.cache_data
 def load_data():
     return pd.read_csv('lingue.csv')
-
-try:
-    df = load_data()
-except FileNotFoundError:
-    st.error("Errore: File 'lingue.csv' non trovato. Assicurati che sia nella stessa cartella dello script.")
-    st.stop()
-
-# --- INIZIALIZZAZIONE STATE ---
-if 'search_active' not in st.session_state:
-    st.session_state.search_active = ""
-if 'diff_active' not in st.session_state:
-    st.session_state.diff_active = "Tutte"
-if 'sort_by_active' not in st.session_state:
-    st.session_state.sort_by_active = "Nome"
-if 'sort_dir_active' not in st.session_state:
-    st.session_state.sort_dir_active = "↑ Crescente"
-
-# --- SIDEBAR WIDGETS ---
+df = load_data()
+# --- SIDEBAR ---
 st.sidebar.title("🔍 Filtri")
-
-search_input = st.sidebar.text_input("Cerca una lingua...", value=st.session_state.search_active)
-
+search = st.sidebar.text_input("Cerca una lingua...")
 diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
-current_diff_idx = diff_options.index(st.session_state.diff_active)
-diff_input = st.sidebar.selectbox("Difficoltà", diff_options, index=current_diff_idx)
-
-sort_by_options = ["Nome", "Parlanti", "Difficoltà"]
-current_sort_idx = sort_by_options.index(st.session_state.sort_by_active)
-sort_by_input = st.sidebar.selectbox("Ordina per", sort_by_options, index=current_sort_idx)
-
-sort_dir_options = ["↑ Crescente", "↓ Decrescente"]
-current_dir_idx = sort_dir_options.index(st.session_state.sort_dir_active)
-sort_dir_input = st.sidebar.selectbox("Ordine", sort_dir_options, index=current_dir_idx)
-
-# Tasto statico fisso sempre presente
-btn_filtra = st.sidebar.button("Applica Filtri 🚀")
-
-if btn_filtra:
-    st.session_state.search_active = search_input
-    st.session_state.diff_active = diff_input
-    st.session_state.sort_by_active = sort_by_input
-    st.session_state.sort_dir_active = sort_dir_input
-    st.rerun()
-
+diff_filter = st.sidebar.selectbox("Difficoltà", diff_options)
+sort_by = st.sidebar.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
+sort_dir = st.sidebar.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
 # --- MAIN LOGIC ---
-ascending = st.session_state.sort_dir_active == "↑ Crescente"
-
-filtered_df = df[df['nome'].str.contains(st.session_state.search_active, case=False)].copy()
-
-if st.session_state.diff_active != "Tutte":
-    exact_diff = diff_options.index(st.session_state.diff_active)  
+ascending = sort_dir == "↑ Crescente"
+filtered_df = df[df['nome'].str.contains(search, case=False)].copy()
+# Difficoltà esatta (non massima)
+if diff_filter != "Tutte":
+    exact_diff = diff_options.index(diff_filter)  # indice 1=1 stella, 2=2 stelle...
     filtered_df = filtered_df[filtered_df['difficolta'] == exact_diff]
-
-if st.session_state.sort_by_active == "Nome":
+# Ordinamento
+if sort_by == "Nome":
     filtered_df = filtered_df.sort_values('nome', ascending=ascending)
-elif st.session_state.sort_by_active == "Difficoltà":
+elif sort_by == "Difficoltà":
     filtered_df = filtered_df.sort_values('difficolta', ascending=ascending)
-elif st.session_state.sort_by_active == "Parlanti":
+elif sort_by == "Parlanti":
     def parse_speakers(s):
         s = str(s).lower().replace(',', '.')
         parts = s.split()
@@ -176,8 +84,6 @@ elif st.session_state.sort_by_active == "Parlanti":
         return val
     filtered_df['_spk'] = filtered_df['speakers'].apply(parse_speakers)
     filtered_df = filtered_df.sort_values('_spk', ascending=ascending).drop(columns=['_spk'])
-
-# --- RENDERING DEI RISULTATI ---
 if not filtered_df.empty:
     for index, row in filtered_df.iterrows():
         stars = "⭐" * int(row['difficolta'])
@@ -204,4 +110,4 @@ if not filtered_df.empty:
             </div>
         """, unsafe_allow_html=True)
 else:
-    st.warning("Nessuna lingua trovata con i filtri correnti.")
+    st.warning("Nessuna lingua trovata.")
