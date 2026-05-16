@@ -38,13 +38,20 @@ st.markdown(f"""
         color: #e0e0e0;
     }}
 
-    /* Personalizzazione estetica del tasto di invio del form nella sidebar */
-    [data-testid="stSidebar"] button {{
+    /* Personalizzazione estetica del tasto Filtra nella sidebar */
+    div.stButton > button {{
         background-color: #4dabff !important;
         color: white !important;
         border-radius: 8px !important;
         border: none !important;
         width: 100%;
+        font-weight: bold;
+        padding: 10px;
+        transition: background-color 0.3s;
+    }}
+    div.stButton > button:hover {{
+        background-color: #358ecc !important;
+        color: white !important;
     }}
 
     .banner {{
@@ -100,36 +107,60 @@ except FileNotFoundError:
     st.error("Errore: File 'lingue.csv' non trovato. Assicurati che sia nella stessa cartella dello script.")
     st.stop()
 
-# --- SIDEBAR (CON FORM E TASTO DI CONFERMA) ---
+# --- INIZIALIZZAZIONE STATE ---
+# Usiamo lo st.session_state per salvare i filtri attivi in memoria
+if 'search_active' not in st.session_state:
+    st.session_state.search_active = ""
+if 'diff_active' not in st.session_state:
+    st.session_state.diff_active = "Tutte"
+if 'sort_by_active' not in st.session_state:
+    st.session_state.sort_by_active = "Nome"
+if 'sort_dir_active' not in st.session_state:
+    st.session_state.sort_dir_active = "↑ Crescente"
+
+# --- SIDEBAR WIDGETS ---
 st.sidebar.title("🔍 Filtri")
 
-# Creiamo un form nella sidebar: l'app si aggiornerà solo al click sul tasto finale
-with st.sidebar.form(key="filter_form"):
-    search = st.text_input("Cerca una lingua...")
+# I widget cambiano temporaneamente i valori di input...
+search_input = st.sidebar.text_input("Cerca una lingua...", value=st.session_state.search_active)
 
-    diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
-    diff_filter = st.selectbox("Difficoltà", diff_options)
+diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
+current_diff_idx = diff_options.index(st.session_state.diff_active)
+diff_input = st.sidebar.selectbox("Difficoltà", diff_options, index=current_diff_idx)
 
-    sort_by = st.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
-    sort_dir = st.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
-    
-    # Ecco il tasto obbligatorio per applicare i filtri scritti sopra
-    submit_button = st.form_submit_button(label="Applica Filtri 🚀")
+sort_by_options = ["Nome", "Parlanti", "Difficoltà"]
+current_sort_idx = sort_by_options.index(st.session_state.sort_by_active)
+sort_by_input = st.sidebar.selectbox("Ordina per", sort_by_options, index=current_sort_idx)
 
-# --- MAIN LOGIC ---
-ascending = sort_dir == "↑ Crescente"
+sort_dir_options = ["↑ Crescente", "↓ Decrescente"]
+current_dir_idx = sort_dir_options.index(st.session_state.sort_dir_active)
+sort_dir_input = st.sidebar.selectbox("Ordine", sort_dir_options, index=current_dir_idx)
 
-filtered_df = df[df['nome'].str.contains(search, case=False)].copy()
+# Tasto statico fisso sempre presente
+btn_filtra = st.sidebar.button("Applica Filtri 🚀")
 
-if diff_filter != "Tutte":
-    exact_diff = diff_options.index(diff_filter)  
+# ...ma i filtri cambiano EFFETTIVAMENTE solo quando clicchi il tasto
+if btn_filtra:
+    st.session_state.search_active = search_input
+    st.session_state.diff_active = diff_input
+    st.session_state.sort_by_active = sort_by_input
+    st.session_state.sort_dir_active = sort_dir_input
+    st.rerun()
+
+# --- MAIN LOGIC (Utilizza i filtri salvati nello state) ---
+ascending = st.session_state.sort_dir_active == "↑ Crescente"
+
+filtered_df = df[df['nome'].str.contains(st.session_state.search_active, case=False)].copy()
+
+if st.session_state.diff_active != "Tutte":
+    exact_diff = diff_options.index(st.session_state.diff_active)  
     filtered_df = filtered_df[filtered_df['difficolta'] == exact_diff]
 
-if sort_by == "Nome":
+if st.session_state.sort_by_active == "Nome":
     filtered_df = filtered_df.sort_values('nome', ascending=ascending)
-elif sort_by == "Difficoltà":
+elif st.session_state.sort_by_active == "Difficoltà":
     filtered_df = filtered_df.sort_values('difficolta', ascending=ascending)
-elif sort_by == "Parlanti":
+elif st.session_state.sort_by_active == "Parlanti":
     def parse_speakers(s):
         s = str(s).lower().replace(',', '.')
         parts = s.split()
@@ -143,6 +174,7 @@ elif sort_by == "Parlanti":
     filtered_df['_spk'] = filtered_df['speakers'].apply(parse_speakers)
     filtered_df = filtered_df.sort_values('_spk', ascending=ascending).drop(columns=['_spk'])
 
+# --- RENDERING DEI RISULTATI ---
 if not filtered_df.empty:
     for index, row in filtered_df.iterrows():
         stars = "⭐" * int(row['difficolta'])
@@ -169,4 +201,4 @@ if not filtered_df.empty:
             </div>
         """, unsafe_allow_html=True)
 else:
-    st.warning("Nessuna lingua trovata.")
+    st.warning("Nessuna lingua trovata con i filtri correnti.")
