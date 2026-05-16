@@ -8,7 +8,7 @@ BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&
 
 st.markdown(f"""
     <style>
-    /* 1. Sfondo generale leggermente più chiaro */
+    /* Sfondo generale leggermente più chiaro (dal turno precedente) */
     .stApp {{ background-color: #12122c; }} 
     
     .block-container {{
@@ -20,7 +20,7 @@ st.markdown(f"""
         border-radius: 20px;
     }}
     
-    /* 3. Tendina (Sidebar) della stessa palette di colori */
+    /* Tendina (Sidebar) della stessa palette di colori (dal turno precedente) */
     [data-testid="stSidebar"] {{
         background-color: #1b1b3a !important;
     }}
@@ -32,7 +32,8 @@ st.markdown(f"""
     .banner {{
         width: 100%;
         height: 180px;
-        background-image: linear-gradient(to bottom, rgba(27, 27, 58, 0.4), rgba(27, 27, 58, 1)), url('{BANNER_URL}');
+        /* MODIFICA: La sfumatura ora inizia a 0 trasparenza in alto (rgba(..., 0)) */
+        background-image: linear-gradient(to bottom, rgba(27, 27, 58, 0), rgba(27, 27, 58, 1)), url('{BANNER_URL}');
         background-size: cover;
         background-position: center;
         border-radius: 15px;
@@ -42,7 +43,7 @@ st.markdown(f"""
         margin-bottom: 20px;
     }}
     
-    /* 2. Banner più alto su dispositivi mobili (telefoni) */
+    /* Banner più alto su dispositivi mobili (telefoni) (dal turno precedente) */
     @media (max-width: 768px) {{
         .banner {{
             height: 250px;
