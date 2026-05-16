@@ -8,11 +8,21 @@ BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&
 
 st.markdown(f"""
     <style>
-    /* Sfondo generale leggermente più chiaro (dal turno precedente) */
+    /* MODIFICA: Nasconde la barra nera nativa di Streamlit (Share, GitHub, ecc.) */
+    [data-testid="stHeader"] {{
+        display: none !important;
+    }}
+    
+    /* Rimuove lo spazio vuoto in alto lasciato dalla barra nascosta */
+    .stAppDeployDropdown {{
+        display: none !important;
+    }}
+    
+    /* Sfondo generale leggermente più chiaro */
     .stApp {{ background-color: #12122c; }} 
     
     .block-container {{
-        background-color: #1b1b3a; /* Container in palette più chiara */
+        background-color: #1b1b3a; 
         max-width: 850px !important; 
         padding: 1rem !important; 
         box-shadow: 0 0 50px rgba(0,0,0,0.5); 
@@ -20,11 +30,10 @@ st.markdown(f"""
         border-radius: 20px;
     }}
     
-    /* Tendina (Sidebar) della stessa palette di colori (dal turno precedente) */
+    /* Tendina (Sidebar) della stessa palette di colori */
     [data-testid="stSidebar"] {{
         background-color: #1b1b3a !important;
     }}
-    /* Colore del testo nella sidebar per garantire leggibilità */
     [data-testid="stSidebar"] * {{
         color: #e0e0e0;
     }}
@@ -32,7 +41,6 @@ st.markdown(f"""
     .banner {{
         width: 100%;
         height: 180px;
-        /* MODIFICA: La sfumatura ora inizia a 0 trasparenza in alto (rgba(..., 0)) */
         background-image: linear-gradient(to bottom, rgba(27, 27, 58, 0), rgba(27, 27, 58, 1)), url('{BANNER_URL}');
         background-size: cover;
         background-position: center;
@@ -43,7 +51,7 @@ st.markdown(f"""
         margin-bottom: 20px;
     }}
     
-    /* Banner più alto su dispositivi mobili (telefoni) (dal turno precedente) */
+    /* Banner più alto su dispositivi mobili (telefoni) */
     @media (max-width: 768px) {{
         .banner {{
             height: 250px;
@@ -59,7 +67,7 @@ st.markdown(f"""
         text-align: center;
     }}
     .language-card {{
-        background: rgba(255, 255, 255, 0.05); /* Leggermente più visibile sullo sfondo chiaro */
+        background: rgba(255, 255, 255, 0.05); 
         padding: 15px;
         border-radius: 15px;
         margin-bottom: 15px;
@@ -77,8 +85,6 @@ st.markdown(f"""
 def load_data():
     return pd.read_csv('lingue.csv')
 
-# Per testare il codice senza il file CSV, puoi usare questo DataFrame fittizio:
-# df = pd.DataFrame([{'nome': 'Inglese', 'difficolta': 2, 'speakers': '1.5 Miliardi', 'link_learn': '#'}, {'nome': 'Giapponese', 'difficolta': 5, 'speakers': '125 Milioni', 'link_learn': '#'}])
 try:
     df = load_data()
 except FileNotFoundError:
@@ -101,12 +107,10 @@ ascending = sort_dir == "↑ Crescente"
 
 filtered_df = df[df['nome'].str.contains(search, case=False)].copy()
 
-# Difficoltà esatta (non massima)
 if diff_filter != "Tutte":
-    exact_diff = diff_options.index(diff_filter)  # indice 1=1 stella, 2=2 stelle...
+    exact_diff = diff_options.index(diff_filter)  
     filtered_df = filtered_df[filtered_df['difficolta'] == exact_diff]
 
-# Ordinamento
 if sort_by == "Nome":
     filtered_df = filtered_df.sort_values('nome', ascending=ascending)
 elif sort_by == "Difficoltà":
