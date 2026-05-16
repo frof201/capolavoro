@@ -8,19 +8,31 @@ BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&
 
 st.markdown(f"""
     <style>
-    .stApp {{ background-color: #050517; }}
+    /* 1. Sfondo generale leggermente più chiaro */
+    .stApp {{ background-color: #12122c; }} 
+    
     .block-container {{
-        background-color: #0d0d2b; 
+        background-color: #1b1b3a; /* Container in palette più chiara */
         max-width: 850px !important; 
         padding: 1rem !important; 
         box-shadow: 0 0 50px rgba(0,0,0,0.5); 
         margin-top: 10px;
         border-radius: 20px;
     }}
+    
+    /* 3. Tendina (Sidebar) della stessa palette di colori */
+    [data-testid="stSidebar"] {{
+        background-color: #1b1b3a !important;
+    }}
+    /* Colore del testo nella sidebar per garantire leggibilità */
+    [data-testid="stSidebar"] * {{
+        color: #e0e0e0;
+    }}
+
     .banner {{
         width: 100%;
         height: 180px;
-        background-image: linear-gradient(to bottom, rgba(13, 13, 43, 0.3), rgba(13, 13, 43, 1)), url('{BANNER_URL}');
+        background-image: linear-gradient(to bottom, rgba(27, 27, 58, 0.4), rgba(27, 27, 58, 1)), url('{BANNER_URL}');
         background-size: cover;
         background-position: center;
         border-radius: 15px;
@@ -29,6 +41,14 @@ st.markdown(f"""
         justify-content: center;
         margin-bottom: 20px;
     }}
+    
+    /* 2. Banner più alto su dispositivi mobili (telefoni) */
+    @media (max-width: 768px) {{
+        .banner {{
+            height: 250px;
+        }}
+    }}
+
     .main-title {{
         color: white;
         font-size: clamp(30px, 8vw, 55px);
@@ -38,11 +58,11 @@ st.markdown(f"""
         text-align: center;
     }}
     .language-card {{
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(255, 255, 255, 0.05); /* Leggermente più visibile sullo sfondo chiaro */
         padding: 15px;
         border-radius: 15px;
         margin-bottom: 15px;
-        border: 1px solid rgba(77, 171, 255, 0.2);
+        border: 1px solid rgba(77, 171, 255, 0.3);
     }}
     .wiki-link {{ color: #4dabff; text-decoration: none; font-weight: bold; font-size: 14px; }}
     </style>
@@ -56,7 +76,13 @@ st.markdown(f"""
 def load_data():
     return pd.read_csv('lingue.csv')
 
-df = load_data()
+# Per testare il codice senza il file CSV, puoi usare questo DataFrame fittizio:
+# df = pd.DataFrame([{'nome': 'Inglese', 'difficolta': 2, 'speakers': '1.5 Miliardi', 'link_learn': '#'}, {'nome': 'Giapponese', 'difficolta': 5, 'speakers': '125 Milioni', 'link_learn': '#'}])
+try:
+    df = load_data()
+except FileNotFoundError:
+    st.error("Errore: File 'lingue.csv' non trovato. Assicurati che sia nella stessa cartella dello script.")
+    st.stop()
 
 # --- SIDEBAR ---
 st.sidebar.title("🔍 Filtri")
