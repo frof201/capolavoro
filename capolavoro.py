@@ -8,7 +8,7 @@ BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&
 
 st.markdown(f"""
     <style>
-    /* MODIFICA: Nasconde la barra nera nativa di Streamlit (Share, GitHub, ecc.) */
+    /* Nasconde la barra nera nativa di Streamlit (Share, GitHub, ecc.) */
     [data-testid="stHeader"] {{
         display: none !important;
     }}
@@ -36,6 +36,15 @@ st.markdown(f"""
     }}
     [data-testid="stSidebar"] * {{
         color: #e0e0e0;
+    }}
+
+    /* Personalizzazione estetica del tasto di invio del form nella sidebar */
+    [data-testid="stSidebar"] button {{
+        background-color: #4dabff !important;
+        color: white !important;
+        border-radius: 8px !important;
+        border: none !important;
+        width: 100%;
     }}
 
     .banner {{
@@ -91,16 +100,21 @@ except FileNotFoundError:
     st.error("Errore: File 'lingue.csv' non trovato. Assicurati che sia nella stessa cartella dello script.")
     st.stop()
 
-# --- SIDEBAR ---
+# --- SIDEBAR (CON FORM E TASTO DI CONFERMA) ---
 st.sidebar.title("🔍 Filtri")
 
-search = st.sidebar.text_input("Cerca una lingua...")
+# Creiamo un form nella sidebar: l'app si aggiornerà solo al click sul tasto finale
+with st.sidebar.form(key="filter_form"):
+    search = st.text_input("Cerca una lingua...")
 
-diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
-diff_filter = st.sidebar.selectbox("Difficoltà", diff_options)
+    diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "⭐⭐⭐⭐⭐ 5"]
+    diff_filter = st.selectbox("Difficoltà", diff_options)
 
-sort_by = st.sidebar.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
-sort_dir = st.sidebar.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
+    sort_by = st.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
+    sort_dir = st.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
+    
+    # Ecco il tasto obbligatorio per applicare i filtri scritti sopra
+    submit_button = st.form_submit_button(label="Applica Filtri 🚀")
 
 # --- MAIN LOGIC ---
 ascending = sort_dir == "↑ Crescente"
