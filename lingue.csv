@@ -1,6 +1,6 @@
 nome,speakers,val,difficolta,link_learn,link_wiki
 Inglese,1.5 miliardi,1500,2,https://www.duolingo.com/course/en/it/,https://it.wikipedia.org/wiki/Lingua_inglese
-Cinese Mandarino,1.1 miliardi,1100,5,https://www.italki.com/it/learn-chinese-online,https://it.wikipedia.org/wiki/Lingua_cinese_mandarino
+Cinese Mandarino,1.1 miliardi,1100,5,https://www.italki.com/it/learn-chinese-online,https://it.wikipedia.org/wiki/Mandarino
 Hindi,602 milioni,602,4,https://www.duolingo.com/course/hi/en/,https://it.wikipedia.org/wiki/Lingua_hindi
 Spagnolo,560 milioni,560,2,https://www.duolingo.com/course/es/it/,https://it.wikipedia.org/wiki/Lingua_spagnola
 Francese,310 milioni,310,3,https://www.duolingo.com/course/fr/it/,https://it.wikipedia.org/wiki/Lingua_francese
@@ -13,7 +13,7 @@ Indonesiano,200 milioni,200,2,https://www.duolingo.com/course/id/en/,https://it.
 Tedesco,135 milioni,135,4,https://www.duolingo.com/course/de/it/,https://it.wikipedia.org/wiki/Lingua_tedesca
 Punjabi,130 milioni,130,4,https://www.50languages.com/impara-punjabi-gratis,https://it.wikipedia.org/wiki/Lingua_punjabi
 Giapponese,123 milioni,123,5,https://www.duolingo.com/course/ja/en/,https://it.wikipedia.org/wiki/Lingua_giapponese
-Nigeriano (Pidgin),120 milioni,120,2,https://preply.com/it/tutor/7824044,https://it.wikipedia.org/wiki/Pidgin_nigeriano
+Nigeriano (Pidgin),120 milioni,120,2,https://preply.com/it/tutor/7824044,https://en.wikipedia.org/wiki/Pidgin
 Marathi,99 milioni,99,4,https://preply.com/it/online/tutor-marathi,https://it.wikipedia.org/wiki/Lingua_marathi
 Telugu,96 milioni,96,4,https://preply.com/it/corsi/telugu,https://it.wikipedia.org/wiki/Lingua_telugu
 Turco,90 milioni,90,3,https://www.duolingo.com/course/tr/en/,https://it.wikipedia.org/wiki/Lingua_turca
@@ -37,7 +37,7 @@ Pashto,50 milioni,50,5,https://preply.com/it/online/tutor-pashto,https://it.wiki
 Yoruba,46 milioni,46,4,https://it.cambridgeschool.online/yoruba-language-courses-online-learning-yoruba-online-in-language-school/,https://it.wikipedia.org/wiki/Lingua_yoruba
 Cinese Min Nan,46 milioni,46,5,https://www.amazingtalker.pl/courses/min_nan_chinese/grammar,https://it.wikipedia.org/wiki/Lingua_min_nan
 Malayalam,45 milioni,45,5,https://ling-app.com/learn-malayalam/,https://it.wikipedia.org/wiki/Lingua_malayalam
-Uzbeko,44 milioni,44,3,https://www.17-minute-languages.com/it/imparare-uzbeco/,https://it.wikipedia.org/wiki/Lingua_uzbecca
+Uzbeko,44 milioni,44,3,https://www.17-minute-languages.com/it/imparare-uzbeco/,https://it.wikipedia.org/wiki/Lingua_uzbeca
 Polacco,41 milioni,41,4,https://www.duolingo.com/course/pl/en/,https://it.wikipedia.org/wiki/Lingua_polacca
 Oriya,40 milioni,40,4,https://utalk.com/it/store/oriya,https://it.wikipedia.org/wiki/Lingua_oriya
 Birmano,39 milioni,39,5,https://ling-app.com/learn-burmese/,https://it.wikipedia.org/wiki/Lingua_birmana
@@ -86,7 +86,7 @@ Dogri,2.6 milioni,2,4,https://www.itraininginstitute.com/courses/indian-language
 Sloveno,2.5 milioni,2,3,https://ling-app.com/learn-slovenian/,https://it.wikipedia.org/wiki/Lingua_slovena
 Konkani,2.5 milioni,2,4,https://infyni.com/course/konkani-language-online-course,https://it.wikipedia.org/wiki/Lingua_konkani
 Galiziano,2.4 milioni,2,2,https://lorcainstitute.com/it/galiziano-it,https://it.wikipedia.org/wiki/Lingua_galiziana
-Lettone,2 milioni,2,4,https://ling-app.com/learn-latvian/,https://it.wikipedia.org/wiki/Lingua_lettona
+Lettone,2 milioni,2,4,https://ling-app.com/learn-latvian/,https://it.wikipedia.org/wiki/Lingua_lettone
 Macedone,2 milioni,2,3,https://academy.europa.eu/courses/discover-the-macedonian-language-with-online-language-support/view/?lang=it,https://it.wikipedia.org/wiki/Lingua_macedone
 Ndebele,2 milioni,2,4,https://beingafrican.org/courses/ndebele-language-course/,https://it.wikipedia.org/wiki/Lingua_ndebele_del_nord
 Manipuri,1.8 milioni,1,5,https://www.classcentral.com/course/swayam-basic-course-in-manipuri-504955,https://it.wikipedia.org/wiki/Lingua_manipuri
