@@ -1,8 +1,11 @@
 import streamlit as st
 import pandas as pd
+
 # --- CONFIG & STYLES ---
 st.set_page_config(page_title="OMNILINGUA", layout="wide")
+
 BANNER_URL = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+
 st.markdown(f"""
     <style>
     .stApp {{ background-color: #050517; }}
@@ -43,15 +46,19 @@ st.markdown(f"""
     }}
     .wiki-link {{ color: #4dabff; text-decoration: none; font-weight: bold; font-size: 14px; }}
     </style>
+
     <div class="banner">
         <div class="main-title">OMNILINGUA</div>
     </div>
 """, unsafe_allow_html=True)
+
 # --- LOAD DATA ---
 @st.cache_data
 def load_data():
     return pd.read_csv('lingue.csv')
+
 df = load_data()
+
 # --- SIDEBAR ---
 st.sidebar.title("🔍 Filtri")
 search = st.sidebar.text_input("Cerca una lingua...")
@@ -59,13 +66,16 @@ diff_options = ["Tutte", "⭐ 1", "⭐⭐ 2", "⭐⭐⭐ 3", "⭐⭐⭐⭐ 4", "
 diff_filter = st.sidebar.selectbox("Difficoltà", diff_options)
 sort_by = st.sidebar.selectbox("Ordina per", ["Nome", "Parlanti", "Difficoltà"])
 sort_dir = st.sidebar.selectbox("Ordine", ["↑ Crescente", "↓ Decrescente"])
+
 # --- MAIN LOGIC ---
 ascending = sort_dir == "↑ Crescente"
 filtered_df = df[df['nome'].str.contains(search, case=False)].copy()
+
 # Difficoltà esatta (non massima)
 if diff_filter != "Tutte":
     exact_diff = diff_options.index(diff_filter)  # indice 1=1 stella, 2=2 stelle...
     filtered_df = filtered_df[filtered_df['difficolta'] == exact_diff]
+
 # Ordinamento
 if sort_by == "Nome":
     filtered_df = filtered_df.sort_values('nome', ascending=ascending)
@@ -74,22 +84,20 @@ elif sort_by == "Difficoltà":
 elif sort_by == "Parlanti":
     def parse_speakers(s):
         s = str(s).lower().strip()
-        
         is_large_scale = 'milion' in s or 'miliard' in s
 
         if is_large_scale:
             s = s.replace(',', '.') 
         else:
-
             s = s.replace('.', '').replace(',', '')
 
         parts = s.split()
         try:
-
             val_str = ''.join(c for c in parts[0] if c.isdigit() or c == '.')
             val = float(val_str)
         except:
             return 0
+
         if any('miliard' in p for p in parts):
             val *= 1_000_000_000
         elif any('milion' in p for p in parts):
@@ -101,6 +109,7 @@ elif sort_by == "Parlanti":
 
     filtered_df['_spk'] = filtered_df['speakers'].apply(parse_speakers)
     filtered_df = filtered_df.sort_values('_spk', ascending=ascending).drop(columns=['_spk'])
+
 if not filtered_df.empty:
     for index, row in filtered_df.iterrows():
         stars = "⭐" * int(row['difficolta'])
@@ -111,7 +120,7 @@ if not filtered_df.empty:
                     <span style="font-size: 18px;">🌍</span>
                 </div>
                 <div style="margin: 10px 0;">
-                    <a href="https://it.wikipedia.org/wiki/Lingua_{row['nome'].replace(' ', '_')}" target="_blank" class="wiki-link">📖 Wikipedia</a>
+                    <a href="{row['link_wiki']}" target="_blank" class="wiki-link">📖 Wikipedia</a>
                 </div>
                 <div style="color: #b0b0cc; font-size: 14px;">
                     <b>Speakers:</b> {row['speakers']}<br>
