@@ -74,23 +74,27 @@ elif sort_by == "Difficoltà":
 elif sort_by == "Parlanti":
     def parse_speakers(s):
         s = str(s).lower().strip()
-        # Rimuove eventuali punti usati come separatori di migliaia (es. 1.200 -> 1200)
-        # e normalizza la virgola per i decimali (es. 1,5 milioni -> 1.5 milioni)
-        s = s.replace('.', '').replace(',', '.')
         
+        is_large_scale = 'milion' in s or 'miliard' in s
+
+        if is_large_scale:
+            s = s.replace(',', '.') 
+        else:
+
+            s = s.replace('.', '').replace(',', '')
+
         parts = s.split()
         try:
-            # Estrae solo il numero (es. "1.5" o "600")
-            val = float(''.join(c for c in parts[0] if c.isdigit() or c == '.'))
+
+            val_str = ''.join(c for c in parts[0] if c.isdigit() or c == '.')
+            val = float(val_str)
         except:
             return 0
-        
-        # Applica il moltiplicatore corretto in base al testo
         if any('miliard' in p for p in parts):
             val *= 1_000_000_000
         elif any('milion' in p for p in parts):
             val *= 1_000_000
-        elif any('mila' in p or 'mila' in s for p in parts):
+        elif 'mila' in s:
             val *= 1_000
             
         return val
